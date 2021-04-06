@@ -43,10 +43,6 @@ public class TransferService {
 
     public void transfer(String sender, String receiver, String concept, BigDecimal amount) {
 
-        if(token.equals("")) {
-            login(new User("mtubio96@gmail.com", "c4zlgXVLfYcjLoO"));
-        }
-
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add("Authorization", "JWT " + token);

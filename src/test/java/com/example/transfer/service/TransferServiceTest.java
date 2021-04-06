@@ -21,17 +21,12 @@ public class TransferServiceTest {
 
     @Test
     public void loginTest() {
-        User user = new User("mtubio96@gmail.com", "c4zlgXVLfYcjLoO");
-        service.login(user);
 
-        assertTrue(true);
     }
 
     @Test
     public void transferTest() {
         
-        service.login(new User("mtubio96@gmail.com", "c4zlgXVLfYcjLoO"));
-        service.transfer("21-1-99999-4-6", "3220001823000055910025", "VAR", BigDecimal.valueOf(10.0d));
     }
     
 }
