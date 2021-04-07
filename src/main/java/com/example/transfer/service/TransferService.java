@@ -1,6 +1,5 @@
 package com.example.transfer.service;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,7 +8,6 @@ import java.util.Optional;
 import com.example.transfer.model.User;
 import com.example.transfer.model.money.Money;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
