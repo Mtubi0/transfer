@@ -2,9 +2,12 @@ package com.example.transfer.service;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import com.example.transfer.model.User;
+import com.example.transfer.model.money.Money;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -24,6 +27,9 @@ public class TransferService {
     private static String LOGIN_URL = "https://sandbox.bind.com.ar/v1/login/jwt";
     private static String TRANSFER_URL = "https://sandbox.bind.com.ar/v1/banks/:bank_id/accounts/:account_id/:view_id/transaction-request-types/TRANSFER/transaction-requests";
 
+    private static String DEFAULT_BANK = "322";
+    private static String DEFAULT_VIEW = "owner";
+
     private RestTemplate restTemplate = new RestTemplate();
 
     @Autowired 
@@ -41,7 +47,7 @@ public class TransferService {
         }
     }
 
-    public void transfer(String sender, String receiver, String concept, BigDecimal amount) {
+    public void transfer(String sender, String receiver, String concept, Money money, List<String> emails, Optional<String> description) {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -49,27 +55,22 @@ public class TransferService {
 
         JsonObject receptor = new JsonObject();
         receptor.addProperty("cbu", receiver);
-        
-        JsonObject money = new JsonObject();
-        money.addProperty("currency", "ARS");
-        money.addProperty("amount", amount);
-
-        JsonArray emails = new JsonArray(); //TODO: refactor
-        emails.add("test@gmail.com");
 
         JsonObject body = new JsonObject();
         body.add("to", receptor);
-        body.add("value", money);
+        body.addProperty("value", parser.toJson(money));
         body.addProperty("concept", concept);
-        body.addProperty("description", "Varios");
-        body.add("emails", emails);
+        body.addProperty("emails", parser.toJson(emails));
+        if(description.isPresent()) {
+            body.addProperty("description", description.get());
+        }
         
         HttpEntity<String> entity = new HttpEntity<String>(body.toString(), headers);
 
         Map<String, String> params = new HashMap<>();
-        params.put("bank_id", "322");
+        params.put("bank_id", DEFAULT_BANK);
         params.put("account_id", sender);
-        params.put("view_id", "owner");
+        params.put("view_id", DEFAULT_VIEW);
 
         restTemplate.postForEntity(TRANSFER_URL, entity, String.class, params);
     }

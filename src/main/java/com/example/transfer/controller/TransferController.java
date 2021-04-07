@@ -1,8 +1,12 @@
 package com.example.transfer.controller;
 
 import java.math.BigDecimal;
+import java.util.Currency;
+import java.util.List;
+import java.util.Optional;
 
 import com.example.transfer.model.User;
+import com.example.transfer.model.money.Money;
 import com.example.transfer.service.TransferService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +30,12 @@ public class TransferController {
     public void transfer(@RequestParam String sender,
                          @RequestParam String receiver,
                          @RequestParam String concept, 
-                         @RequestParam BigDecimal amount) {
+                         @RequestParam String currencyType,
+                         @RequestParam BigDecimal amount,
+                         @RequestParam Optional<String> description,
+                         @RequestParam List<String> emails) {
 
-        transferService.transfer(sender, receiver, concept, amount);
+        transferService.transfer(sender, receiver, concept, new Money(Currency.getInstance(currencyType), amount), emails, description);
     }
     
 }
