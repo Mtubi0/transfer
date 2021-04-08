@@ -8,6 +8,7 @@ import java.util.Optional;
 import com.example.transfer.model.User;
 import com.example.transfer.model.money.Money;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -56,9 +58,9 @@ public class TransferService {
 
         JsonObject body = new JsonObject();
         body.add("to", receptor);
-        body.addProperty("value", parser.toJson(money));
+        body.add("value", parser.toJsonTree(money));
         body.addProperty("concept", concept);
-        body.addProperty("emails", parser.toJson(emails));
+        body.add("emails", parser.toJsonTree(emails));
         if(description.isPresent()) {
             body.addProperty("description", description.get());
         }
@@ -69,7 +71,7 @@ public class TransferService {
         params.put("bank_id", DEFAULT_BANK);
         params.put("account_id", sender);
         params.put("view_id", DEFAULT_VIEW);
-
+        
         restTemplate.postForEntity(TRANSFER_URL, entity, String.class, params);
     }
 }
